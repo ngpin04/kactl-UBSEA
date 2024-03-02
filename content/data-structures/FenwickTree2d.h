@@ -1,36 +1,37 @@
 /**
- * Author: Simon Lindholm
- * Date: 2017-05-11
- * License: CC0
- * Source: folklore
  * Description: Computes sums a[i,j] for all i<I, j<J, and increases single elements a[i,j].
  *  Requires that the elements to be updated are known in advance (call fakeUpdate() before init()).
  * Time: $O(\log^2 N)$. (Use persistent segment trees for $O(\log N)$.)
+ * Note: i > 0 and j > 0
  * Status: stress-tested
  */
 #pragma once
 
-#include "FenwickTree.h"
-
 struct FT2 {
-	vector<vi> ys; vector<FT> ft;
-	FT2(int limx) : ys(limx) {}
+	int n;
+	vector<vi> ys, ft;
+	FT2(int _n) : n(_n), ys(n + 5) {}
 	void fakeUpdate(int x, int y) {
-		for (; x < sz(ys); x |= x + 1) ys[x].push_back(y);
+		for (; x <= n; x += x & -x) ys[x].push_back(y);
 	}
 	void init() {
-		for (vi& v : ys) sort(all(v)), ft.emplace_back(sz(v));
+		for (int i = 1; i <= n; i++) 
+			sort(ALL(ys[i])), ft[i].resize(ys[i].size() + 1);
 	}
 	int ind(int x, int y) {
-		return (int)(lower_bound(all(ys[x]), y) - ys[x].begin()); }
-	void update(int x, int y, ll dif) {
-		for (; x < sz(ys); x |= x + 1)
-			ft[x].update(ind(x, y), dif);
+		return (int)(upper_bound(all(ys[x]), y) - ys[x].begin()); }
+
+	void update(int x, int y, int dif) {
+		for (; x <= n; x += x & -x)
+		for (int i = ind(x, y); i < (int) ft[x].size(); i += i & -i)
+			ft[x][i] += dif;
 	}
-	ll query(int x, int y) {
-		ll sum = 0;
-		for (; x; x &= x - 1)
-			sum += ft[x-1].query(ind(x-1, y));
-		return sum;
+
+	int getsum(int x, int y) {
+		int res = 0;
+		for (; x; x -= x & -x)
+		for (int i = ind(x, y); i > 0; i -= i & -i)
+			res += ft[x][i];
+		return res;
 	}
 };
