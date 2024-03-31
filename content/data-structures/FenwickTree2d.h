@@ -3,7 +3,6 @@
  *  Requires that the elements to be updated are known in advance (call fakeUpdate() before init()).
  * Time: $O(\log^2 N)$. (Use persistent segment trees for $O(\log N)$.)
  * Note: i > 0 and j > 0
- * Status: stress-tested
  */
 #pragma once
 
@@ -12,7 +11,7 @@ typedef vector <int> vi;
 struct FT2 {
 	int n;
 	vector<vi> ys, ft;
-	FT2(int _n) : n(_n), ys(n + 5) {}
+	FT2(int _n) : n(_n), ys(n + 5), ft(n + 5) {}
 	void fakeUpdate(int x, int y) {
 		for (; x <= n; x += x & -x) ys[x].push_back(y);
 	}
