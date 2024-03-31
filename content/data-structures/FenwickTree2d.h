@@ -7,6 +7,8 @@
  */
 #pragma once
 
+typedef vector <int> vi;
+
 struct FT2 {
 	int n;
 	vector<vi> ys, ft;
@@ -19,7 +21,7 @@ struct FT2 {
 			sort(ALL(ys[i])), ft[i].resize(ys[i].size() + 1);
 	}
 	int ind(int x, int y) {
-		return (int)(upper_bound(all(ys[x]), y) - ys[x].begin()); }
+		return (int)(upper_bound(ALL(ys[x]), y) - ys[x].begin()); }
 
 	void update(int x, int y, int dif) {
 		for (; x <= n; x += x & -x)
