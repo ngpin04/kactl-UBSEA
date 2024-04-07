@@ -82,7 +82,7 @@ struct Dinic {
 		long long res = 0;
  
 		while (bfs(s, t)) {
-			while (int val = dfs(s, oo, t)) 
+			while (int val = dfs(s, ooo, t)) 
 				res += val;
 		}
 		return res;
@@ -92,7 +92,7 @@ struct Dinic {
 	vector <Edge> mincut(int s, int t) {
 		long long res = 0;
 		while (bfs(s, t)) {
-			while (long long val = dfs(s, oo, t))
+			while (long long val = dfs(s, ooo, t))
 				res += val;
         }
 		bfs(s, t);
