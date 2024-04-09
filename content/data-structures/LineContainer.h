@@ -1,42 +1,64 @@
 /**
- * Author: Simon Lindholm
- * Date: 2017-04-20
- * License: CC0
- * Source: own work
- * Description: Container where you can add lines of the form kx+m, and query maximum values at points x.
- *  Useful for dynamic programming (``convex hull trick'').
- * Time: O(\log N)
- * Status: stress-tested
+ * Convexhull Trick
+ * have not been tested!!!!
  */
 #pragma once
 
-struct Line {
-	mutable ll k, m, p;
-	bool operator<(const Line& o) const { return k < o.k; }
-	bool operator<(ll x) const { return p < x; }
-};
+template <typename T> 
+struct CHT {
+	vector <pair <T, T>> hull;
+	vector <double> inters;
+	int n, ptr;
 
-struct LineContainer : multiset<Line, less<>> {
-	// (for doubles, use inf = 1/.0, div(a,b) = a/b)
-	static const ll inf = LLONG_MAX;
-	ll div(ll a, ll b) { // floored division
-		return a / b - ((a ^ b) < 0 && a % b); }
-	bool isect(iterator x, iterator y) {
-		if (y == end()) return x->p = inf, 0;
-		if (x->k == y->k) x->p = x->m > y->m ? inf : -inf;
-		else x->p = div(y->m - x->m, x->k - y->k);
-		return x->p >= y->p;
+	CHT() {
+		inters.push_back(-1e18);
+		ptr = 0, n = 0;
 	}
-	void add(ll k, ll m) {
-		auto z = insert({k, m, 0}), y = z++, x = y;
-		while (isect(y, z)) z = erase(z);
-		if (x != begin() && isect(--x, y)) isect(x, y = erase(y));
-		while ((y = x) != begin() && (--x)->p >= y->p)
-			isect(x, erase(y));
+
+	double inters(pair <T, T> a, pair <T, T> b) {
+		return -(double) (a.se - b.se) / (a.fi - b.fi);
 	}
-	ll query(ll x) {
-		assert(!empty());
-		auto l = *lower_bound(x);
-		return l.k * x + l.m;
+
+	bool ok(pair <T, T> a, pair <T, T> b, pair <T, T> c) {
+		return inters(a, c) < inters(b, c);
+	}
+
+	void add(pair <T, T> line) {
+		while (n > 0 && line.fi == hull.back().fi) {
+			assert(line.se > hull.back().se);
+			hull.pop_back();
+			n--;
+			if (inters.size() > 1) {
+				inters.pop_back();
+			}
+		}
+
+		while (n > 1 && !ok(hull[n - 2], hull[n - 1], line)) {
+			n--;
+			hull.pop_back();
+			inters.pop_back();
+		}	
+
+		hull.push_back(line);
+		inters.push_back(intersect(line, hull.back()));
+		n++;
+		mini(ptr, n - 2);
+	}
+
+	// query with binary search
+	T querybin(T x) {
+		assert(n > 0);
+		int it = lower_bound(ALL(inters), x) - inters.begin();
+		return hull[it].fi * x + hull[it].se;
+	}
+
+	// query with pointer, only when x is non-decreasing.
+	T queryptr(T x) {
+		assert(n > 0);
+		while (ptr + 1 < (int) inters.size() && x >= inters[ptr + 1]) {
+			ptr++;
+		}
+
+		return hull[ptr].fi * x + hull[ptr].se;
 	}
 };
