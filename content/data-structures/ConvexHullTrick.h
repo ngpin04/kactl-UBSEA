@@ -1,13 +1,14 @@
 /**
  * Convexhull Trick
- * have not been tested!!!!
+ * tested with https://www.acmicpc.net/problem/11001\
+ * Usage: add lines by increasing order of (slope, y-inter) for max query and vice versa
  */
 #pragma once
 
 template <typename T> 
 struct CHT {
 	vector <pair <T, T>> hull;
-	vector <double> inters;
+	vector <long double> inters;
 	int n, ptr;
 
 	CHT() {
@@ -15,17 +16,16 @@ struct CHT {
 		ptr = 0, n = 0;
 	}
 
-	double inters(pair <T, T> a, pair <T, T> b) {
-		return -(double) (a.se - b.se) / (a.fi - b.fi);
+	long double inter(pair <T, T> a, pair <T, T> b) {
+		return -(long double) (a.se - b.se) / (a.fi - b.fi);
 	}
 
 	bool ok(pair <T, T> a, pair <T, T> b, pair <T, T> c) {
-		return inters(a, c) < inters(b, c);
+		return inter(a, c) <= inter(b, c);
 	}
 
 	void add(pair <T, T> line) {
 		while (n > 0 && line.fi == hull.back().fi) {
-			assert(line.se > hull.back().se);
 			hull.pop_back();
 			n--;
 			if (inters.size() > 1) {
@@ -39,8 +39,10 @@ struct CHT {
 			inters.pop_back();
 		}	
 
+		if (n > 0) {
+			inters.push_back(inter(line, hull.back()));
+		}
 		hull.push_back(line);
-		inters.push_back(intersect(line, hull.back()));
 		n++;
 		mini(ptr, n - 2);
 	}
@@ -48,7 +50,7 @@ struct CHT {
 	// query with binary search
 	T querybin(T x) {
 		assert(n > 0);
-		int it = lower_bound(ALL(inters), x) - inters.begin();
+		int it = upper_bound(ALL(inters), x) - inters.begin() - 1;
 		return hull[it].fi * x + hull[it].se;
 	}
 
