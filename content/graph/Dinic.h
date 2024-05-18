@@ -29,7 +29,6 @@ struct Dinic {
 		n = _n;
 		adj.assign(n + 5, vector <Edge> (0));
 		lev = ptr = vector <int>(n + 5, 0);
-		lev.assign(n + 5, 0);
 	}
  
 	void addEdge(int u, int v, long long cap, long long rcap = 0) {
