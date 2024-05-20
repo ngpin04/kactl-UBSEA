@@ -1,7 +1,7 @@
 /**
- * Signature: floor_sum(n, m, a, b)
- * Usage: Calculate sum of (a * i + b) / m for i from 0 to n - 1
- * Complexity: O(log(a) + log(m))
+ * Author: me
+ * Description: Calculate sum of (a * i + b) / m for i from 0 to n - 1
+ * Time: O(log(a) + log(m))
  * Copied from https://atcoder.jp/contests/practice2/submissions/18805092
  */
 #pragma once

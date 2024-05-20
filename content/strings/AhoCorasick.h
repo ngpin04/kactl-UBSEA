@@ -1,4 +1,6 @@
 /**
+ * Author: me
+ * Description: can not insert once querying
  * Tested with https://www.acmicpc.net/problem/9250
  */
 

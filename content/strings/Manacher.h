@@ -1,5 +1,6 @@
 /**
- * Description: 
+ * Author: me
+ * Description: the string will become *a*a*a*a*a* and f[i] = the longest palindrome centering at i
  * Time: O(N)
  * Status: Stress-tested
  */

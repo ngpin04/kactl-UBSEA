@@ -1,4 +1,6 @@
 /**
+ * Author: me
+ * Description: create a heavy low decomposition
  * Time: O((\log N)^2)
  * Status: stress-tested against old HLD
  */

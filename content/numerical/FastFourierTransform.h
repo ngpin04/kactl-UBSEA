@@ -1,5 +1,7 @@
 /**
- * Usage: convMod<mod>((vector <ll>) a, (vector <ll>) b); 
+ * Author: me
+ * Description: FFT of two vector a and b
+ * Time: O(n log n) with high constant
  * Tested with: https://judge.yosupo.jp/problem/convolution_mod
  */
 #pragma once

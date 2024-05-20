@@ -1,6 +1,7 @@
 /**
  * Tested with https://www.acmicpc.net/problem/1210
- * 
+ * Author: me
+ * Description: Find a maximum flow from source to sink (and minimum cut)
  */
 #pragma once
 

@@ -1,7 +1,8 @@
 /**
  * Convexhull Trick
  * tested with https://www.acmicpc.net/problem/11001\
- * Usage: add lines by increasing order of (slope, y-inter) for max query and vice versa
+ * Author: me
+ * Description: add lines by increasing order of (slope, y-inter) for max query and vice versa
  */
 #pragma once
 

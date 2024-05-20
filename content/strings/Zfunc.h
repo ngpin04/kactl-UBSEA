@@ -1,4 +1,6 @@
 /**
+ * Author: me
+ * Description: create a Z array from a string s
  * Time: O(n)
  * Status: stress-tested with https://judge.yosupo.jp/submission/60727
  */
