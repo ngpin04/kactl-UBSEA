@@ -1,4 +1,7 @@
-// write some note here
+/** 
+ * Author: me
+ * Description: Dynamic Convex Hull
+*/
 
 struct pt {
     int x, y;

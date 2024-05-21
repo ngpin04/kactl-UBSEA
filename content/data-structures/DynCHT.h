@@ -1,3 +1,8 @@
+/**
+ * Author: me
+ * Description: Dynamic convexhull trick
+*/
+
 #include <bits/stdc++.h>
 #define ll long long
 // source: https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp
