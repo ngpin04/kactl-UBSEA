@@ -17,26 +17,65 @@
  */
 #pragma once
 
-struct SuffixArray {
-	vi sa, lcp;
-	SuffixArray(string& s, int lim=256) { // or basic_string<int>
-		int n = sz(s) + 1, k = 0, a, b;
-		vi x(all(s)+1), y(n), ws(max(n, lim)), rank(n);
-		sa = lcp = y, iota(all(sa), 0);
-		for (int j = 0, p = 0; p < n; j = max(1, j * 2), lim = p) {
-			p = j, iota(all(y), n - j);
-			rep(i,0,n) if (sa[i] >= j) y[p++] = sa[i] - j;
-			fill(all(ws), 0);
-			rep(i,0,n) ws[x[i]]++;
-			rep(i,1,lim) ws[i] += ws[i - 1];
-			for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
-			swap(x, y), p = 1, x[sa[0]] = 0;
-			rep(i,1,n) a = sa[i - 1], b = sa[i], x[b] =
-				(y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
+struct SufArr {
+	vector<int> sa;
+	vector<int> pos;
+	vector<int> lcp;
+	string s;
+	int n;
+
+	SufArr(string _s) {
+		s = ' ' + _s;
+		n = _s.size();
+		buildSA();
+		buildLCP();
+	}
+
+	void buildSA() {
+		sa.assign(n + 1, 0); pos.assign(2 * n + 1, 0);
+		iota(ALL(sa), 0);
+		sort(ALL(sa), [&](int i, int j) {
+			return s[i] < s[j];
+		});
+		iota(ALL(pos), 0);
+
+		for (int i = 1; i <= n; i++) {
+			int u = sa[i]; int v = sa[i - 1];
+			pos[u] = (s[u] == s[v]) ? pos[v] : i;
 		}
-		rep(i,1,n) rank[sa[i]] = i;
-		for (int i = 0, j; i < n - 1; lcp[rank[i++]] = k)
-			for (k && k--, j = sa[rank[i] - 1];
-					s[i + k] == s[j + k]; k++);
+
+		for (int len = 1; len <= n; len <<= 1) {
+			vector <int> tsa(sa), tpos(pos), ptr(n + 1, 0);
+			iota(ALL(ptr), 0);
+
+			for (int i = n + 1; i <= n + len; i++)
+				sa[ptr[pos[i - len]]++] = i - len;
+
+			for (int i : tsa) 
+				if (i >= len)
+					sa[ptr[pos[i - len]]++] = i - len;
+		
+			for (int i = 1; i <= n; i++) {
+				int u = sa[i], v = sa[i - 1];
+				pos[u] = 
+				(tpos[u] == tpos[v] &&  tpos[u + len] == tpos[v + len]) ? 
+				pos[v] : i;
+			}
+		}
+
+		// for (int x : sa)
+		// 	cerr << x << " ";
+	}
+
+	void buildLCP() {
+		lcp.assign(n, 0);
+		for (int i = 1; i <= n; i++) if (pos[i] < n) {
+			int &res = lcp[pos[i]];
+			if (pos[i - 1] < n)
+				res = max(0, lcp[pos[i - 1]] - 1);
+			int j = sa[pos[i] + 1];
+			while (max(i, j) + res <= n && s[i + res] == s[j + res])
+				res++;
+		}
 	}
 };
